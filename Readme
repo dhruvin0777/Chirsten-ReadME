@@ -1,0 +1,69 @@
+SQL Constraints:
+
+NOT NULL 
+In SQL, the NOT NULL constraint is used to ensure that a column in a table does not contain any NULL values. NULL represents the absence of a value or unknown data, and by default, most columns in a table allow NULL values unless specified otherwise.
+
+CREATE TABLE employees (
+    employee_id INT NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    hire_date DATE NOT NULL
+);
+
+UNIQUE
+
+In SQL, the UNIQUE constraint is used to ensure that all values in a column are different.
+
+CREATE TABLE students (
+    student_id INT UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    username VARCHAR(50) UNIQUE
+);
+
+FOREIGN KEY
+
+In SQL, the FOREIGN KEY constraint is used to ensure that the values in one column are present
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    -- Other columns
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
+);
+
+CHECK
+
+In SQL, the CHECK constraint is used to ensure that the values in a column are consistent with the constraints of another column.
+
+CREATE TABLE employees (
+    employee_id INT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    salary DECIMAL(10, 2),
+    hire_date DATE,
+    -- Other columns
+    CHECK (salary > 0 AND hire_date <= CURRENT_DATE)
+);
+
+DEFAULT
+
+In SQL, the DEFAULT constraint is used to set a default value for a column if no value.
+
+CREATE TABLE employees (
+    employee_id INT,
+    first_name VARCHAR(50) DEFAULT 'John',
+    last_name VARCHAR(50) DEFAULT 'Doe',
+    hire_date DATE DEFAULT CURRENT_DATE
+);
+
+PRIMARY KEY
+
+In SQL, the PRIMARY KEY constraint is used to ensure that all values in a column are different.
+
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    age INT
+);

@@ -1,69 +1,132 @@
-SQL Constraints:
+Four JOINs in SQL
+INNER JOIN: 
+Returns records that have matching values in both tables
 
-NOT NULL 
-In SQL, the NOT NULL constraint is used to ensure that a column in a table does not contain any NULL values. NULL represents the absence of a value or unknown data, and by default, most columns in a table allow NULL values unless specified otherwise.
+Table: customers
 
-CREATE TABLE employees (
-    employee_id INT NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    hire_date DATE NOT NULL
-);
+customer_id | customer_name | city
+------------|---------------|------
+1           | John          | London
+2           | Emily         | Paris
+3           | David         | New York
 
-UNIQUE
+Table: orders
 
-In SQL, the UNIQUE constraint is used to ensure that all values in a column are different.
+order_id | customer_id | order_date
+---------|-------------|-----------
+101      | 1           | 2023-05-01
+102      | 2           | 2023-05-02
+103      | 1           | 2023-05-03
+We can use the INNER JOIN to retrieve a result set that combines the customer information with their corresponding orders:
 
-CREATE TABLE students (
-    student_id INT UNIQUE,
-    email VARCHAR(100) UNIQUE,
-    username VARCHAR(50) UNIQUE
-);
+SELECT customers.customer_name, orders.order_id, orders.order_date
+FROM customers
+INNER JOIN orders ON customers.customer_id = orders.customer_id;
 
-FOREIGN KEY
+The result of the above query would be:
 
-In SQL, the FOREIGN KEY constraint is used to ensure that the values in one column are present
+customer_name | order_id | order_date
+--------------|----------|-----------
+John          | 101      | 2023-05-01
+Emily         | 102      | 2023-05-02
+John          | 103      | 2023-05-03
 
-CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
-    customer_id INT,
-    order_date DATE,
-    -- Other columns
-    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
-);
+LEFT JOIN:
+Returns all records from the left table, and the matched records from the right table
 
-CHECK
+Table: departments
 
-In SQL, the CHECK constraint is used to ensure that the values in a column are consistent with the constraints of another column.
+department_id | department_name
+--------------|----------------
+1             | Sales
+2             | Marketing
+3             | Finance
+Table: employees
 
-CREATE TABLE employees (
-    employee_id INT,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    salary DECIMAL(10, 2),
-    hire_date DATE,
-    -- Other columns
-    CHECK (salary > 0 AND hire_date <= CURRENT_DATE)
-);
+employee_id | employee_name | department_id
+------------|---------------|--------------
+1           | John          | 1
+2           | Emily         | 2
+3           | David         | 2
+We can use the LEFT JOIN to retrieve a result set that combines all the departments with their corresponding employees, if any:
 
-DEFAULT
+SELECT departments.department_name, employees.employee_name
+FROM departments
+LEFT JOIN employees ON departments.department_id = employees.department_id;
 
-In SQL, the DEFAULT constraint is used to set a default value for a column if no value.
+The result of the above query would be:
 
-CREATE TABLE employees (
-    employee_id INT,
-    first_name VARCHAR(50) DEFAULT 'John',
-    last_name VARCHAR(50) DEFAULT 'Doe',
-    hire_date DATE DEFAULT CURRENT_DATE
-);
+department_name | employee_name
+----------------|---------------
+Sales           | John
+Marketing       | Emily
+Marketing       | David
+Finance         | NULL
 
-PRIMARY KEY
+RIGHT JOIN:
+Returns all records from the right table, and the matched records from the left table
 
-In SQL, the PRIMARY KEY constraint is used to ensure that all values in a column are different.
+Table: departments
 
-CREATE TABLE students (
-    student_id INT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    age INT
-);
+department_id | department_name
+--------------|----------------
+1             | Sales
+2             | Marketing
+3             | Finance
+Table: employees
+
+employee_id | employee_name | department_id
+------------|---------------|--------------
+1           | John          | 1
+2           | Emily         | 2
+3           | David         | 2
+
+We can use the RIGHT JOIN to retrieve a result set that combines all the employees with their corresponding departments, if any:
+
+SELECT departments.department_name, employees.employee_name
+FROM departments
+RIGHT JOIN employees ON departments.department_id = employees.department_id;
+
+The result of the above query would be:
+
+department_name | employee_name
+----------------|---------------
+Sales           | John
+Marketing       | Emily
+Marketing       | David
+NULL            | NULL
+
+FULL JOIN: 
+Returns all records when there is a match in either left or right table
+
+Table: departments
+
+department_id | department_name
+--------------|----------------
+1             | Sales
+2             | Marketing
+3             | Finance
+Table: employees
+
+employee_id | employee_name | department_id
+------------|---------------|--------------
+1           | John          | 1
+2           | Emily         | 2
+3           | David         | 2
+4           | Sarah         | NULL
+
+We can use the FULL JOIN to retrieve a result set that combines all the departments with their corresponding employees, including non-matching records:
+
+SELECT departments.department_name, employees.employee_name
+FROM departments
+FULL JOIN employees ON departments.department_id = employees.department_id;
+
+The result of the above query would be:
+
+department_name | employee_name
+----------------|---------------
+Sales           | John
+Marketing       | Emily
+Marketing       | David
+Finance         | NULL
+NULL            | Sarah
